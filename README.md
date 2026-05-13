@@ -1,6 +1,6 @@
 # Headscale + Headplane (Docker Compose, Rocky Linux 9)
 
-Turnkey Compose stack: **Headscale** (Tailscale-compatible control server) on port **8080** and **Headplane** (web UI) on port **3000**.
+Turnkey Compose stack: **Headscale** (Tailscale-compatible control server) on port **8080** and **Headplane** (web UI) published on host port **3030** (container still listens on **3000** internally).
 
 ## Layout
 
@@ -32,7 +32,7 @@ Turnkey Compose stack: **Headscale** (Tailscale-compatible control server) on po
 
 3. Open Headplane:
 
-   - Direct to container port: `http://YOUR_SERVER_IP:3000/admin`
+   - Direct to published port: `http://YOUR_SERVER_IP:3030/admin`
    - Behind TLS on **`scale.f1y.ing`** (recommended): use your reverse proxy path (often `https://scale.f1y.ing/admin`). This repo’s configs assume **`server_url`** / **`base_url`** / **`public_url`** are `https://scale.f1y.ing`. Tailscale nodes still talk to Headscale via that HTTPS URL while Headplane calls Headscale internally at `http://headscale:8080`.
 
    Plain **`http://scale.f1y.ing:8080`** can reach Headscale directly for debugging; clients should still use **`https://scale.f1y.ing`** as `server_url` when TLS terminates at your proxy.
@@ -71,7 +71,7 @@ Turnkey Compose stack: **Headscale** (Tailscale-compatible control server) on po
 | Headplane `server.base_url` | `https://scale.f1y.ing` |
 | Headplane `headscale.public_url` | `https://scale.f1y.ing` |
 
-If Headplane is only exposed as **`http://scale.f1y.ing:3000`** (no HTTPS on that port), set `base_url` to that URL, use `cookie_secure: false`, and put Headscale `server_url` back to whatever URL nodes actually use.
+If Headplane is only exposed as **`http://scale.f1y.ing:3030`** (no HTTPS on that port), set `base_url` to that URL, use `cookie_secure: false`, and put Headscale `server_url` back to whatever URL nodes actually use.
 
 ## Optional checks
 
@@ -94,4 +94,4 @@ Expected when **`server_url`** is `https://…` for clients but Headscale itself
 ## Notes
 
 - Images use `latest` tags; pin versions in `compose.yml` when you want reproducible upgrades.
-- With HTTPS on **`scale.f1y.ing`**, `cookie_secure` is `true`. Terminate TLS in your reverse proxy and forward to container ports **8080** (Headscale) and **3000** (Headplane).
+- With HTTPS on **`scale.f1y.ing`**, `cookie_secure` is `true`. Terminate TLS in your reverse proxy and forward to backend **8080** (Headscale) and **3030** on the host (maps to Headplane **3000** in the container).

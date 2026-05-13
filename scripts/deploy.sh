@@ -32,5 +32,5 @@ mkdir -p config data/headscale data/headplane
 docker compose -f "${ROOT}/compose.yml" up -d
 
 echo
-echo "Stack is up. Headplane: http://$(hostname -I 2>/dev/null | awk '{print $1}' || echo localhost):3000/admin"
+echo "Stack is up. Headplane: http://$(hostname -I 2>/dev/null | awk '{print $1}' || echo localhost):3030/admin"
 echo "See README.md for API key login and config edits."

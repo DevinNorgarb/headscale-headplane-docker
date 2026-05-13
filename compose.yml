@@ -22,7 +22,7 @@ services:
     depends_on:
       - headscale
     ports:
-      - "3000:3000"
+      - "3030:3000"
     volumes:
       - ./config/headplane.yaml:/etc/headplane/config.yaml:ro
       - ./data/headplane:/var/lib/headplane
