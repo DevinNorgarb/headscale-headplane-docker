@@ -20,9 +20,15 @@ headscale:
 integration:
   agent:
     enabled: false
+    # Required by Headplane ≥ ~0.7 even when the agent is off (see tale/headplane#455).
+    pre_authkey: ""
   docker:
     enabled: false
+    container_label: "me.tale.headplane.target=headscale"
+    socket: "unix:///var/run/docker.sock"
   kubernetes:
     enabled: false
+    validate_manifest: true
+    pod_name: "headscale"
   proc:
     enabled: false

@@ -81,6 +81,16 @@ Validate Headscale config inside the container:
 docker compose exec headscale headscale configtest
 ```
 
+## Troubleshooting
+
+### Headplane exits: `pre_authkey` / `pod_name` missing
+
+Current Headplane builds validate **every** integration subtree. Keep `integration.agent.pre_authkey` as an empty string when the agent is disabled, and set `integration.kubernetes.pod_name` (ignored while `kubernetes.enabled` is false). This repo’s `config/headplane.yaml` includes both.
+
+### Headscale log: “Listening without TLS but ServerURL does not start with http://”
+
+Expected when **`server_url`** is `https://…` for clients but Headscale itself listens on plain HTTP (**`listen_addr`** inside Docker) and **TLS terminates at your reverse proxy**. Match [Headscale reverse-proxy TLS notes](https://headscale.net/stable/ref/integration/reverse-proxy/) (`tls_cert_path` / `tls_key_path` empty, proxy forwards WebSockets).
+
 ## Notes
 
 - Images use `latest` tags; pin versions in `compose.yml` when you want reproducible upgrades.
